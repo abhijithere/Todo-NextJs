@@ -14,7 +14,7 @@ function page() {
 
       return router.push('/login');
     }
-  }, [checkAuthentication()]);
+  }, []);
 
  
 

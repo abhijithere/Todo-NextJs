@@ -34,7 +34,7 @@ function Page() {
 
       return router.push('/');
     }
-  }, [checkAuthentication()]);
+  }, []);
 
   const [formData, setFormData] = useState({
     email: "",
