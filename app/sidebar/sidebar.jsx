@@ -1,13 +1,110 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AllTasks from '../Tabs/AllTasks';
 import CreateTaks from '../Tabs/CreateTaks';
 import CompleteTasks from '../Tabs/CompleteTasks';
 import IncompleteTasks from '../Tabs/IncompleteTasks';
+import { removecookieweb } from '@/Authentication/RemoveCookie';
+import { useRouter } from 'next/navigation';
+import { checkAuthentication } from '@/Authentication/CheckAuth';
+import Spinner from '../Spinner';
+import Loader from '../Loader';
+import { toast } from "react-toastify";
 
-function sidebar() {
+
+
+
+function Sidebar() {
+   const router = useRouter();
+
 
     const [selectedTab, setSelectedTab] = useState('all');
+    const [user,setuser]=useState([]);
+    const [loading,setloading]=useState(true)
+    const [open , setopen]=useState(false)
+
+    const logoutHandler = async () => {
+      try {
+        const res = await fetch("/api/auth/logout");
+  
+        const data = await res.json();
+  
+        if (!data.success) toast.error(data.message, {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "dark",
+         });
+
+
+  
+       
+        removecookieweb();
+  
+        toast.success(data.message, {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "dark",
+         });
+
+
+        router.refresh()
+
+
+
+      } catch (error) {
+        return toast.error(error, {
+         position: "top-right",
+         autoClose: 5000,
+         hideProgressBar: false,
+         closeOnClick: true,
+         pauseOnHover: true,
+         draggable: true,
+         progress: undefined,
+         theme: "dark",
+         });
+      }
+    };
+  useEffect(() => {
+    if(!checkAuthentication()){
+
+      return router.push('/login');
+    }
+  }, [logoutHandler]);
+
+    useEffect(() => {
+      const datafetch = async () => {
+         try {
+            const res = await fetch("/api/auth/me", {
+               method: "GET",
+               headers: {
+                  "Content-Type": "application/json",
+               },
+            });
+
+            const data = await res.json();
+
+            setuser(data.user);
+
+            setloading(false)
+            
+
+           
+         } catch (error) {
+            console.log(error)
+         }
+      }
+      datafetch();
+    }, [loading]);
 
     // Function to handle tab change
     const handleTabChange = (tab) => {
@@ -30,25 +127,32 @@ function sidebar() {
       }
     };
   
+
   return (
     <>
       
-<button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex items-center p-2 mt-2 ms-3 text-sm  rounded-lg sm:hidden  focus:outline-none focus:ring-2  text-gray-400 hover:bg-gray-700 focus:ring-gray-600">
+{
+   loading?<Loader/>:(
+      <>
+      <div className='flex justify-end mr-5 '>
+      <button data-drawer-target="default-sidebar" data-drawer-toggle="default-sidebar" aria-controls="default-sidebar" type="button" class="inline-flex  items-center  p-2 mt-2 ms-3 text-sm  rounded-lg sm:hidden  focus:outline-none focus:ring-2  text-gray-400 hover:bg-gray-700 focus:ring-gray-600" onClick={()=>open?setopen(false):setopen(true)}>
    <span class="sr-only">Open sidebar</span>
    <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
    <path clip-rule="evenodd" fill-rule="evenodd" d="M2 4.75A.75.75 0 012.75 4h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 4.75zm0 10.5a.75.75 0 01.75-.75h7.5a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75zM2 10a.75.75 0 01.75-.75h14.5a.75.75 0 010 1.5H2.75A.75.75 0 012 10z"></path>
    </svg>
 </button>
+      </div>
+      
 
-<aside id="default-sidebar" class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full sm:translate-x-0 " aria-label="Sidebar">
+<aside id="default-sidebar" class={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${open?"translate-x-0":"-translate-x-full"} -translate-x-full sm:-translate-x-0 `} aria-label="Sidebar">
    <div class="h-full px-3 py-4 overflow-y-auto  bg-gray-800">
 
    <div className='flex flex-col justify-center items-center mb-16'>
         <svg class="w-20 h-20  transition duration-75 text-gray-400  group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
     <path fill-rule="evenodd" d="M12 20a8 8 0 0 1-5-1.8v-.6c0-1.8 1.5-3.3 3.3-3.3h3.4c1.8 0 3.3 1.5 3.3 3.3v.6a8 8 0 0 1-5 1.8ZM2 12a10 10 0 1 1 10 10A10 10 0 0 1 2 12Zm10-5a3.3 3.3 0 0 0-3.3 3.3c0 1.7 1.5 3.2 3.3 3.2 1.8 0 3.3-1.5 3.3-3.3C15.3 8.6 13.8 7 12 7Z" clip-rule="evenodd"/>
   </svg>
-  <h1 className='text-green-400 font-semibold mt-2 text-xl'>Abhijit Sinha</h1>
-  <p className='text-sm mt-2 text-red-300'>sinhaabhijit2002@gmail.com</p>
+  <h1 className='text-green-400 font-semibold mt-2 text-xl'>{user && user.name}</h1>
+  <p className='text-sm mt-2 text-red-300'>{user && user.email}</p>
         </div>
       <ul class="space-y-3 font-medium ">
        
@@ -99,22 +203,25 @@ function sidebar() {
             </div>
          </li>
          <li>
-            <a href="#" class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
+            <div  class="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group">
                <svg class="flex-shrink-0 w-5 h-5  transition duration-75 text-gray-400  group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
                   <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>
                </svg>
-               <span class="flex-1 ms-3 whitespace-nowrap">Logout</span>
-            </a>
+               <span class="flex-1 ms-3 whitespace-nowrap" onClick={logoutHandler}>Logout</span>
+            </div>
          </li>
+
          
       </ul>
    </div>
 </aside>
-
-{renderComponent()}
+{loading?  <Spinner/>:renderComponent()}
+      </>
+   )
+}
 
     </>
   )
 }
 
-export default sidebar
+export default Sidebar

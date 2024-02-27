@@ -29,6 +29,8 @@ function Page() {
   
   const router = useRouter();
 
+
+
   useEffect(() => {
     if(checkAuthentication()){
 
@@ -100,6 +102,7 @@ function Page() {
             }
           )
       }
+
     } catch (error) {
       toast.error(data.message, {
         position: "top-right",
@@ -119,7 +122,7 @@ function Page() {
 
   return (
     <>
-      <div className="flex justify-center items-center h-screen bg-slate-900">
+  <div className="flex justify-center items-center h-screen bg-slate-900">
         <Card className="mx-auto max-w-lg border-[hsl(216,31%,20%)] border-r-2 rounded-2xl p-4 min-h-[400px]">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl font-bold text-green-300">Login</CardTitle>
@@ -146,7 +149,7 @@ function Page() {
           </CardContent>
         </Card>
       </div>
-    </>
+  </>
   );
 }
 

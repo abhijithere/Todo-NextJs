@@ -7,7 +7,6 @@ export const connectDB = async () => {
   const { connection } = await mongoose.connect(process.env.MONGO_URI, {
     dbName: "Todo13",
   });
-  console.log(`Database Connected on ${connection.host}`);
 };
 export const cookieSetter = (res, token, set) => {
   res.setHeader(
@@ -29,10 +28,12 @@ export const checkAuth = async (req) => {
   const cookie = req.headers.cookie;
   if (!cookie) return null;
 
-  const token = cookie.split("=")[1];
+  // const token = cookie.split("=")[0];
+  const {token}= req.cookies;
 
   const decoded = jwt.verify(token,process.env.JWT_SECRET);
-  console.log(decoded._id)
+
+  // console.log(decoded._id)
 
   return await User.findById(decoded._id);
 };

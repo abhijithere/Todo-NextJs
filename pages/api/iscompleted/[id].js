@@ -3,7 +3,6 @@ import { Task } from "../../../models/task";
 import { asyncError, errorHandler } from "../../../middlewares/error";
 
 const handler = asyncError(async (req, res) => {
-  const {title,description}=req.body;
   await connectDB();
   const user = await checkAuth(req);
   if (!user) return errorHandler(res, 401, "Login First");
@@ -16,15 +15,14 @@ const handler = asyncError(async (req, res) => {
   if (!task) return errorHandler(res, 404, "Task not found");
 
   if (req.method === "PUT") {
-    task.title=title;
-    task.description=description;
+    task.isCompleted = !task.isCompleted;
   
 
     await task.save();
 
     res.status(200).json({
       success: true,
-      message: "Task Updated Successfully",
+      message: "Status Changed Successfully",
     });
   } else if (req.method === "DELETE") {
     await task.deleteOne();

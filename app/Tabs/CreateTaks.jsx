@@ -15,19 +15,30 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
+import { toast } from "react-toastify";
+import { z } from 'zod';
+
+
+const schema = z.string().refine((text) => {
+  const wordCount = text.trim().split(/\s+/).filter(Boolean).length;
+  return wordCount >= 14;
+}, { message: 'Minimum 14 words required' });
 
 
 
 function CreateTaks() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [validationError, setValidationError] = useState('');
+
 
   const submithandle = async (e) => {
-    alert("hii")
     e.preventDefault();
 
     try {
-      const res = await fetch("/api/auth/", {
+      schema.parse(description);
+      setValidationError('');
+      const res = await fetch("/api/newtask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -39,16 +50,46 @@ function CreateTaks() {
       });
 
       const data = await res.json();
-      alert(data.message)
 
-      if (!data.success) return alert(data.message);
+      if (!data.success) return (toast.error(data.message, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        }))
 
-      alert(data.message);
+        toast.success(data.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+          });
+
       
       setTitle("");
       setDescription("");
+      return;
     } catch (error) {
-      return alert(error);
+      setValidationError("Minimum 14 words required");
+      return toast.error(error, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
+        });;
+      
     }
   }
 
@@ -65,7 +106,7 @@ function CreateTaks() {
               </p>
               <AlertDialog  >
                 <AlertDialogTrigger asChild>
-                  <Button variant="outline" className='bg-blue-500 text-white p-7 hover:bg-blue-400 rounded-full'>Show Dialog</Button>
+                  <Button variant="outline" className='bg-blue-500 text-white p-7 hover:bg-blue-400 rounded-full'>Add Your Task</Button>
                 </AlertDialogTrigger>
 
                 <AlertDialogContent className=' border-gray-800 bg-black border-b-4 border-b-blue-400'>
@@ -83,10 +124,11 @@ function CreateTaks() {
                       <Textarea placeholder="Type your Task Description here." value={description}
                         onChange={(e) => setDescription(e.target.value)}
                         required />
+                         {validationError && <p style={{ color: 'red' }}>{validationError}</p>}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel className='bg-red-500 text-white'>Cancel</AlertDialogCancel>
+                    <AlertDialogCancel className='bg-red-500 text-white'>Close</AlertDialogCancel>
                     <AlertDialogAction className='text-white' onClick={submithandle}>Add Task</AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
