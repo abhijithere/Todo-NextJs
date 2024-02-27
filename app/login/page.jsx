@@ -4,7 +4,6 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { z, object } from "zod";
 import '../../styles/globals.css';
 import Link from "next/link";
 import { toast } from "react-toastify";
@@ -18,10 +17,7 @@ import { checkAuthentication } from "@/Authentication/CheckAuth";
 
 
 // Define your form schema using Zod
-const loginSchema = object({
-  email: z.string().email(),
-  password: z.string().min(6),
-});
+
 
 function Page() {
 
@@ -143,7 +139,7 @@ function Page() {
               <Button className="w-full rounded-md text-white" type="submit">
                 Login
               </Button>
-              <Label className='flex text-sm gap-2'>Don't Have any account ? <Link className="text-blue-400 underline" href={'/register'}>sign up</Link></Label>
+              <Label className='flex text-sm gap-2'>Dont Have any account ? <Link className="text-blue-400 underline" href={'/register'}>sign up</Link></Label>
               
             </form>
           </CardContent>

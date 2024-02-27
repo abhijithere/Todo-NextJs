@@ -7,7 +7,7 @@ import Loader from './Loader';
 
 
 
-function page() {
+function Page() {
   const router = useRouter();
   const [loading,setloading]=useState(true);
 
@@ -55,4 +55,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

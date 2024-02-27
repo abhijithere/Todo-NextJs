@@ -221,7 +221,7 @@ function AllTasks() {
    return (
       <>
          {
-            task.length == 0 ?
+            task&&task.length == 0 ?
                <>
                <CreateTaks/>
                </>
@@ -237,7 +237,7 @@ function AllTasks() {
 <div class="p-4 border-2  border-dashed rounded-lg border-gray-700">
    <div class="grid grid-cols-3 gap-6 mb-4 max-[1000px]:grid-cols-1">
       {
-          task.map((item) => {
+         task&& task.map((item) => {
             const createdAtDate = new Date(item.createdAt);
             const formattedDate = `${createdAtDate.getDate()}/${createdAtDate.getMonth() + 1}/${createdAtDate.getFullYear()}`;
 
