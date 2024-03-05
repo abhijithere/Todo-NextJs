@@ -172,15 +172,18 @@ function Sidebar() {
 <aside id="default-sidebar" class={`fixed top-0 left-0 z-40 w-64 h-screen transition-transform ${open?"translate-x-0":"-translate-x-full"} -translate-x-full sm:-translate-x-0 `} aria-label="Sidebar">
    <div class="h-full px-3 py-4 overflow-y-auto  bg-gray-800">
 
-   {
-      spinning?<><Spinner/></>:(<div className='flex flex-col justify-center items-center mb-16'>
+  <div className='flex flex-col justify-center items-center mb-16'>
+  {spinning?<><Spinner/></>:(
+     <>
       <svg class="w-20 h-20  transition duration-75 text-gray-400  group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
   <path fill-rule="evenodd" d="M12 20a8 8 0 0 1-5-1.8v-.6c0-1.8 1.5-3.3 3.3-3.3h3.4c1.8 0 3.3 1.5 3.3 3.3v.6a8 8 0 0 1-5 1.8ZM2 12a10 10 0 1 1 10 10A10 10 0 0 1 2 12Zm10-5a3.3 3.3 0 0 0-3.3 3.3c0 1.7 1.5 3.2 3.3 3.2 1.8 0 3.3-1.5 3.3-3.3C15.3 8.6 13.8 7 12 7Z" clip-rule="evenodd"/>
 </svg>
 <h1 className='text-green-400 font-semibold mt-2 text-xl'>{user && user.name}</h1>
 <p className='text-sm mt-2 text-red-300'>{user && user.email}</p>
-      </div>)
-   }
+     </>
+)
+}
+      </div>
       <ul class="space-y-3 font-medium ">
        
          <li>
