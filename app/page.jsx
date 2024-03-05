@@ -22,7 +22,7 @@ function Page() {
       const datafetch = async () => {
 
          try {
-            const res = await fetch("/api/auth/me", {
+            const res = await fetch("/api/mytask", {
                method: "GET",
                headers: {
                   "Content-Type": "application/json",
