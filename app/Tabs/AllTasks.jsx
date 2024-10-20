@@ -233,6 +233,9 @@ function AllTasks() {
 
 
 <div class="p-4 sm:ml-64">
+   <div className='h-20 w-20 flex  justify-center items-center font-semibold text-lg bg-green-400  rounded-full fixed  bottom-5 right-5'>
+{task.length}🔥
+   </div>
 
 <div class="p-4 border-2  border-dashed rounded-lg border-gray-700">
    <div class="grid grid-cols-3 gap-6 mb-4 max-[1000px]:grid-cols-1">
